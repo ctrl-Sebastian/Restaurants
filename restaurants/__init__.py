@@ -1,0 +1,10 @@
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'd8df5a63801e9701cc6b9c04b5872992'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///restaurants.db'
+db = SQLAlchemy(app)
+
+from restaurants import routes

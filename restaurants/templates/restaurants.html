@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurants</title>
+</head>
+<body>
+    {% block content%}
+    {% for restaurant in restaurants %}
+    <div class="col-xl-6 mb-4">
+        <div class="card">
+          <a class="card-body" style="text-decoration: none" href="{{url_for('showMenu', restaurant_id=restaurant.restaurant_id)}}">
+                <h2 class="text-center">{{ restaurant.name }}</h2>
+
+          </a>
+          <div class="d-flex bg-light mb-0">
+            <a
+              class="btn btn-warning m-0 rounded-1 text-reset w-50"
+              href="{{url_for('editRestaurant', restaurant_id=restaurant.restaurant_id)}}"
+              role="button"
+              >Edit
+            </a>
+            <a
+              class="btn btn-danger m-0 rounded-1 text-white w-50"
+              href="{{url_for('deleteRestaurant', restaurant_id=restaurant.restaurant_id)}}"
+              role="button"
+              >Delete</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+{% endblock content %}
+</body>
+</html>
