@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h1 class="display-2 text-white">New restaurant</h1>
+<form method='POST' action="{{url_for('newRestaurant')}}">
+    <div class="input-group mb-3">
+        <span class="input-group-text" for="restaurant_name">Restaurant Name</span>
+        <input class="form-control" required type="text" name="restaurant_name">
+    </div>
+    <button type='submit' class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}

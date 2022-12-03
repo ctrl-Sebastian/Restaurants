@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+{% block content %}
+{% if restaurant %}
+<h1 class="display-2 text-white">Edit restaurant</h1>
+<h4 class="display-4 text-white">{{ restaurant.name }}</h4>
+<form method='POST' action="{{url_for('editRestaurant', restaurant_id=restaurant.id)}}">
+    <div class="input-group mb-3">
+        <span class="input-group-text" for="restaurant_name">Restaurant Name</span>
+        <input class="form-control" required type="text" name="restaurant_name">
+    </div>
+    <button type='submit' class="btn btn-primary">Submit</button>
+</form>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h1 class="display-2 text-white">New Menu</h1>
+<h5 class="display-5 fw-bold text-white">{{restaurant.name}}</h5>
+<form method='POST' action="{{url_for('newMenuItem', restaurant_id=restaurant.id)}}">
+    <div class="input-group mb-3">
+        <span class="input-group-text" for="menu_name">Menu Name</span>
+        <input class="form-control" required type="text" name="menu_name">
+    </div>
+    <div class="input-group mb-3">
+        <span class="input-group-text">$</span>
+        <input class="form-control" required type="number" step="0.01" name="menu_price">
+    </div>
+    <div class="input-group mb-3">
+        <span class="input-group-text">Description</span>
+        <textarea class="form-control" name="menu_description" maxlength="100" size="100" required></textarea>
+    </div>
+    <button type='submit' class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}

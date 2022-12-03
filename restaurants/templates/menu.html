@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div>
+        <h1 class="display-2 text-white">Menus - {{restaurant.name}}</h1>
+        <a role="button" class="btn btn-success btn-md text-white mt-2" href="{{url_for('newMenuItem', restaurant_id=restaurant.id)}}">Create a new menu</a>
+    </div>
+    
+    <div class="row mt-4">
+    {% if menus %}
+        {% for menu in menus %}
+        <div class="col-xl-6 mb-4">
+            <div class="card">
+            <div class="card-body" >
+                    <h2 class="text-center fs-1">{{ menu.name }}</h2>
+                    <p class="text-center text-success fs-4 mb-0 mt-1">{{menu.price}}$</p>
+                    <p class="text-center text-info fs-4 mt-0">{{menu.description}}</p>
+            </div>
+            <div class="d-flex bg-light mb-0">
+                <a
+                class="btn btn-warning m-0 rounded-1 text-reset w-50"
+                href="{{url_for('editMenuItem', restaurant_id=restaurant.id, menu_id=menu.id)}}"
+                role="button"
+                >Edit
+                </a>
+                <a
+                class="btn btn-danger m-0 rounded-1 text-white w-50"
+                href="{{url_for('deleteMenuItem', restaurant_id=restaurant.id, menu_id=menu.id)}}"
+                role="button"
+                >Delete</a>
+            </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+    </div>
+
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h1 class="display-2 text-white">Delete menu</h1>
+<p class="text-white fs-4">Are you sure to delete {{menu.name}}?</p>
+<form method='POST' action="{{url_for('deleteMenuItem', restaurant_id=restaurant.id, menu_id=menu.id)}}">
+    <button type='submit' class="btn btn-danger">Submit</button>
+</form>
+{% endblock %}
