@@ -1,12 +1,41 @@
-from flask import render_template, url_for, flash, redirect, request, jsonify, session
+from flask import render_template, url_for, flash, redirect, request, jsonify, session, abort
 from restaurants import app
 from restaurants.sql import cursor
 from restaurants.sql.models import Base, Restaurant, Menu
 
+GOOGLE_CLIENT_ID = "610084126582-l8v4hv1clqcphtep9pmv01fd1m031ig5.apps.googleusercontent.com"
+
+def login_is_required(function):
+    def wrapper(*args, **kwargs):
+        if "google_id" not in session:
+            return abort(401) #authorization required
+        else:
+            return function()
+    return wrapper
+
+
+@app.route('/login')
+def login():
+    session["google_id"] = "Test"
+    return redirect("/protected_area")
+
+@app.route('/callback')
+def callback():
+    pass
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect("/restaurants")
+
+@app.route('/protected_area')
+@login_is_required
+def protected_area():
+    return "Protected Area! <a href='/logout'><button>Logout</button></a>"
+
 @app.route('/restaurants/error/<string:error>')
 def errorRestaurant(error):
     return render_template('error.html', error=error)
-
 
 @app.route('/')
 @app.route('/restaurants')
