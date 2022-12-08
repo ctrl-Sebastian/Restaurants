@@ -1,22 +1,7 @@
-from flask import render_template, url_for, flash, redirect, request, jsonify
+from flask import render_template, url_for, flash, redirect, request, jsonify, session
 from restaurants import app
 from restaurants.sql import cursor
 from restaurants.sql.models import Base, Restaurant, Menu
-
-#OAuth 2.0
-from flask import session as login_session
-import random, string
-
-Base.metadata.bind
-
-# Create anti-forgery state token
-@app.route('/login')
-def showLogin():
-    state = ''.join(random.choice(string.ascii_uppercase + string.digits)
-                    for x in range(32))
-    login_session['state'] = state
-    return render_template('login.html', STATE=state)
-
 
 @app.route('/restaurants/error/<string:error>')
 def errorRestaurant(error):
@@ -31,7 +16,7 @@ def showRestaurant():
     except:
         restaurants = None
     return render_template('restaurants.html', restaurants=restaurants)
-    
+
 
 @app.route('/restaurant/new', methods=['POST', 'GET'])
 def newRestaurant():
