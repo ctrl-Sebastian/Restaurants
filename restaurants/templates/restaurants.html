@@ -14,7 +14,8 @@
               <div class="card">
                 <a class="card-body" style="text-decoration: none" href="{{url_for('showMenu', restaurant_id=restaurant.id)}}">
                       <h2 class="text-center">{{ restaurant.name }}</h2>
-                      <h3 class="text-center">{{ restaurant.user_id }}</h3>
+                      <h3 class="text-center">{{ restaurant.id }}</h3>
+                      <h4 class="text-center">{{ restaurant.user.name }}</h4>
                 </a>
                 <div class="d-flex bg-light mb-0">
                   <a

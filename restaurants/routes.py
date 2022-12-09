@@ -86,6 +86,10 @@ def callback():
     session["google_id"] = id_info.get("sub")
     session["name"] = id_info.get("name")
 
+    createUser(session)
+    getUserInfo(session['google_id'])
+    getUserID(session['email']) 
+
     return redirect("/restaurants")
 
 
@@ -119,7 +123,7 @@ def newRestaurant():
             if not restaurant_name:
                 raise Exception
             
-            new_restaurant = Restaurant(name=restaurant_name, user_id = session['user_id'])
+            new_restaurant = Restaurant(name=restaurant_name, user_id = session['google_id'])
             
             cursor.add(new_restaurant)
             cursor.commit()

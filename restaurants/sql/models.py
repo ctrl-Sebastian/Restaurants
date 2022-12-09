@@ -1,6 +1,7 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 from restaurants.sql import Base
+from restaurants.sql import cursor
 
 
 class User(Base):
