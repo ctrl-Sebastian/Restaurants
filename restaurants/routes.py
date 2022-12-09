@@ -1,7 +1,7 @@
-from flask import render_template, url_for, flash, redirect, request, jsonify, session, abort
+from flask import render_template, url_for, flash, redirect, request, jsonify, session, abort, make_response
 from restaurants import app
-from restaurants.sql import cursor
-from restaurants.sql.models import Base, Restaurant, Menu
+from restaurants.sql import cursor, Base
+from restaurants.sql.models import Restaurant, Menu, User
 
 #OAuth imports
 import os
@@ -11,6 +11,8 @@ from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
 import google.auth.transport.requests
 from google.oauth2 import id_token
+import httplib2
+import json
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
@@ -23,6 +25,25 @@ flow = Flow.from_client_secrets_file(client_secrets_file=client_secrets_file,
         "openid"],
         redirect_uri="http://127.0.0.1:5000/callback"
         )
+"""
+def getUserID(email):
+    try:
+        user = session.query(User).filter_by(email = email).one()
+        return user.id
+    except:
+        return None
+
+def getUserInfo(user_id):
+    user = session.query(User).filter_by(id = user_id).one()
+    return user
+
+def createUser(session):
+    newUser = User(name = session['name'], email = session['email'], picture = session['picture'])
+    session.add(newUser)
+    session.commit()
+    user = session.query(User).filter_by(email = session['email']).one()
+    return user.id
+"""
 
 def login_is_required(function):
     def wrapper(*args, **kwargs):
@@ -77,7 +98,7 @@ def protected_area():
 # Routes
 @app.route('/restaurants/error/<string:error>')
 def errorRestaurant(error):
-    return render_template('error.html', error=error)
+    return render_template('error.html', error=error, login=login, user = session["name"] if "google_id" in session else None)
 
 @app.route('/')
 @app.route('/restaurants')
@@ -190,7 +211,9 @@ def newMenuItem(restaurant_id):
             menu_price = float(request.form['menu_price'])
             menu_description = request.form['menu_description']
             
-            new_menu = Menu(name=menu_name, price=menu_price, description=menu_description, restaurant_id=restaurant_id, restaurant=restaurant)
+            new_menu = Menu(name=menu_name, price=menu_price, 
+            description=menu_description, restaurant_id=restaurant_id, 
+            restaurant=restaurant)
             
             cursor.add(new_menu)
             cursor.commit()
