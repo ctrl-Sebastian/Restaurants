@@ -27,9 +27,10 @@ flow = Flow.from_client_secrets_file(client_secrets_file=client_secrets_file,
 def login_is_required(function):
     def wrapper(*args, **kwargs):
         if "google_id" not in session:
-            return abort(401) #authorization required
+            return redirect(url_for('errorRestaurant', error='You must be logged in'))
         else:
-            return function()
+            return function(*args, **kwargs)
+    wrapper.__name__ = function.__name__
     return wrapper
 
 
@@ -39,14 +40,21 @@ def login():
     session["state"] = state
     return redirect(authorization_url)
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect("/restaurants")
+
 @app.route('/callback')
 def callback():
     flow.fetch_token(authorization_response=request.url)
-
+    """
     if not session["state"] == request.args["state"]:
-        abort(500) #State does not match!
+        abort(500)  # State does not match!
+    """
+
     credentials = flow.credentials
-    request_session = request.session()
+    request_session = requests.session()
     cached_session = cachecontrol.CacheControl(request_session)
     token_request = google.auth.transport.requests.Request(session=cached_session)
 
@@ -55,13 +63,11 @@ def callback():
         request=token_request,
         audience=GOOGLE_CLIENT_ID
     )
-    return id_info
+    session["google_id"] = id_info.get("sub")
+    session["name"] = id_info.get("name")
 
-
-@app.route('/logout')
-def logout():
-    session.clear()
     return redirect("/restaurants")
+
 
 @app.route('/protected_area')
 @login_is_required
@@ -80,10 +86,12 @@ def showRestaurant():
         restaurants = cursor.query(Restaurant).all()
     except:
         restaurants = None
-    return render_template('restaurants.html', restaurants=restaurants)
+    login = "google_id" in session
+    return render_template('restaurants.html', restaurants=restaurants, login=login, user = session["name"] if "google_id" in session else None)
 
 
 @app.route('/restaurant/new', methods=['POST', 'GET'])
+@login_is_required
 def newRestaurant():
     if request.method == 'POST':
         try:
@@ -100,9 +108,10 @@ def newRestaurant():
             return redirect(url_for('showRestaurant'))
         except:
             return redirect(url_for('errorRestaurant', error='Creating restaurant'))
-    return render_template('newRestaurant.html')
+    return render_template('newRestaurant.html', login=login, user = session["name"] if "google_id" in session else None)
 
 @app.route('/restaurant/<int:restaurant_id>/edit', methods=['POST', 'GET'])
+@login_is_required
 def editRestaurant(restaurant_id):
     if request.method == 'POST':
         try:
@@ -122,12 +131,13 @@ def editRestaurant(restaurant_id):
             return redirect(url_for('errorRestaurant', error='Editing restaurant'))
     try:
         restaurant = cursor.query(Restaurant).get(restaurant_id)
-        return render_template('editRestaurant.html', restaurant=restaurant)
+        return render_template('editRestaurant.html', restaurant=restaurant, login=login, user = session["name"] if "google_id" in session else None)
     except:
         return redirect(url_for('errorRestaurant', error='Retrieving restaurant'))
     
 
 @app.route('/restaurant/<int:restaurant_id>/delete', methods=['POST', 'GET'])
+@login_is_required
 def deleteRestaurant(restaurant_id):
     if request.method == 'POST':
         try:
@@ -146,7 +156,7 @@ def deleteRestaurant(restaurant_id):
             return redirect(url_for('errorRestaurant', error='Deleting restaurant'))
     try:
         restaurant = cursor.query(Restaurant).get(restaurant_id)
-        return render_template('deleteRestaurant.html', restaurant=restaurant)
+        return render_template('deleteRestaurant.html', restaurant=restaurant, login=login, user = session["name"] if "google_id" in session else None)
     except:
         return redirect(url_for('errorRestaurant', error='Retrieving restaurant'))
     
@@ -167,9 +177,10 @@ def showMenu(restaurant_id):
         menus = cursor.query(Menu).filter_by(restaurant_id=restaurant_id).all()    
     except:
         return redirect(url_for('errorRestaurant', error='Retrieving menus or restaurant'))
-    return render_template('menu.html', restaurant=restaurant, menus=menus)
+    return render_template('menu.html', restaurant=restaurant, menus=menus, login=login, user = session["name"] if "google_id" in session else None)
 
 @app.route('/restaurant/<int:restaurant_id>/menu/new', methods=['POST', 'GET'])
+@login_is_required
 def newMenuItem(restaurant_id):
     if request.method == 'POST':
         try:
@@ -190,11 +201,12 @@ def newMenuItem(restaurant_id):
             return redirect(url_for('errorRestaurant'))
     try:
         restaurant = cursor.query(Restaurant).get(restaurant_id)
-        return render_template('newMenuItem.html', restaurant=restaurant)
+        return render_template('newMenuItem.html', restaurant=restaurant, login=login, user = session["name"] if "google_id" in session else None)
     except:
         return redirect(url_for('errorRestaurant', error='Retrieving restaurant'))
 
 @app.route('/restaurant/<int:restaurant_id>/menu/<int:menu_id>/edit', methods=['GET', 'POST'])
+@login_is_required
 def editMenuItem(restaurant_id, menu_id):
     if request.method == 'POST':
         try:
@@ -213,12 +225,13 @@ def editMenuItem(restaurant_id, menu_id):
     try:
         restaurant = cursor.query(Restaurant).get(restaurant_id)
         menu = cursor.query(Menu).get(menu_id)
-        return render_template('editMenuItem.html', restaurant=restaurant, menu=menu)
+        return render_template('editMenuItem.html', restaurant=restaurant, menu=menu, login=login, user = session["name"] if "google_id" in session else None)
     except:
         return redirect(url_for('errorRestaurant', error='Retrieving menu or restaurant'))
         
 
 @app.route('/restaurant/<int:restaurant_id>/menu/<int:menu_id>/delete', methods=['GET', 'POST'])
+@login_is_required
 def deleteMenuItem(restaurant_id, menu_id):
     if request.method == 'POST':
         try:
@@ -235,7 +248,7 @@ def deleteMenuItem(restaurant_id, menu_id):
     try:
         restaurant = cursor.query(Restaurant).get(restaurant_id)
         menu = cursor.query(Menu).get(menu_id)
-        return render_template('deleteMenuItem.html', restaurant=restaurant, menu=menu)
+        return render_template('deleteMenuItem.html', restaurant=restaurant, menu=menu, login=login, user = session["name"] if "google_id" in session else None)
     except:
         return redirect(url_for('errorRestaurant', error='Retrieving menu or restaurant'))
     

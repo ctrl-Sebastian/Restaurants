@@ -38,4 +38,3 @@ class Menu(Base):
             'price': self.price,
             'course': self.course,
         }
-
