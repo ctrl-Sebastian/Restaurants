@@ -11,7 +11,6 @@ from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
 import google.auth.transport.requests
 from google.oauth2 import id_token
-import httplib2
 import json
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
