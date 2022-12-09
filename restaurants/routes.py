@@ -119,7 +119,7 @@ def newRestaurant():
             if not restaurant_name:
                 raise Exception
             
-            new_restaurant = Restaurant(name=restaurant_name)
+            new_restaurant = Restaurant(name=restaurant_name, user_id = session['user_id'])
             
             cursor.add(new_restaurant)
             cursor.commit()
@@ -212,7 +212,7 @@ def newMenuItem(restaurant_id):
             
             new_menu = Menu(name=menu_name, price=menu_price, 
             description=menu_description, restaurant_id=restaurant_id, 
-            restaurant=restaurant)
+            restaurant=restaurant, user_id = session['user_id'])
             
             cursor.add(new_menu)
             cursor.commit()

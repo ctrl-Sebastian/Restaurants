@@ -2,7 +2,6 @@ from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 from restaurants.sql import Base
 
-from restaurants.sql import cursor
 
 class User(Base):
     __tablename__ = 'user'
@@ -55,5 +54,3 @@ class Menu(Base):
             'course': self.course,
             'user_id': self.user_id
         }
-
-Restaurant.__table__.update(cursor.bind)
