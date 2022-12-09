@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request, jsonify, session, abort, make_response
 from restaurants import app
-from restaurants.sql import cursor, Base
-from restaurants.sql.models import Restaurant, Menu
+from restaurants.sql import cursor
+from restaurants.sql.models import Base, Restaurant, Menu, User
 
 #OAuth imports
 import os
@@ -24,7 +24,7 @@ flow = Flow.from_client_secrets_file(client_secrets_file=client_secrets_file,
         "openid"],
         redirect_uri="http://127.0.0.1:5000/callback"
         )
-"""
+
 def getUserID(email):
     try:
         user = session.query(User).filter_by(email = email).one()
@@ -42,7 +42,7 @@ def createUser(session):
     session.commit()
     user = session.query(User).filter_by(email = session['email']).one()
     return user.id
-"""
+
 
 def login_is_required(function):
     def wrapper(*args, **kwargs):
