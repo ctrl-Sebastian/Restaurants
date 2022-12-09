@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request, jsonify, session, abort, make_response
 from restaurants import app
 from restaurants.sql import cursor, Base
-from restaurants.sql.models import Restaurant, Menu, User
+from restaurants.sql.models import Restaurant, Menu
 
 #OAuth imports
 import os

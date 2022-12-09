@@ -2,7 +2,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 from restaurants.sql import Base
 
-
+"""
 class User(Base):
     __tablename__ = 'user'
 
@@ -10,15 +10,15 @@ class User(Base):
     name = Column(String(250), nullable=False)
     email = Column(String(250), nullable=False)
     picture = Column(String(250))
-
+"""
 
 class Restaurant(Base):
     __tablename__ = 'restaurant'
 
     id = Column(Integer, primary_key = True)
     name = Column(String(80), nullable = False)
-    user_id = Column(Integer, ForeignKey('user.id'))
-    user = relationship(User)
+    #user_id = Column(Integer, ForeignKey('user.id'))
+    #user = relationship(User)
 
 
     @property
@@ -39,8 +39,8 @@ class Menu(Base):
     price = Column(String(8))
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'))
     restaurant = relationship(Restaurant)
-    user_id = Column(Integer, ForeignKey('user.id'))
-    user = relationship(User)
+    #user_id = Column(Integer, ForeignKey('user.id'))
+    #user = relationship(User)
 
     @property
     def serialize(self):

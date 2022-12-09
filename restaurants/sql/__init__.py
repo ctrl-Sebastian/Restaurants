@@ -10,4 +10,4 @@ engine = create_engine('sqlite:///restaurants.db', connect_args={"check_same_thr
 DBSession = sessionmaker(bind=engine)
 cursor = DBSession()
 
-from restaurants.sql.models import Restaurant, Menu, User
+from restaurants.sql.models import Restaurant, Menu
