@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="row mt-4">      
+    {% if users %}
+    {% for user in users %}
+    <div class="col-xl-6 mb-4">
+        <div class="card">
+            <a class="card-body" style="text-decoration: none; text-align:center;">
+                <img src="{{ user.picture }}" alt="User's picture" style="border-radius: 25%">
+                <h2 class="text-center">Name: {{ user.name }}</h2>
+                <h3 class="text-center">User ID: {{ user.id }}</h3>
+            </a>
+            <!--
+                <div class="d-flex bg-light mb-0">
+                    <a
+                    class="btn btn-danger m-0 text-white w-100"
+                    href="{{url_for('deleteUser', user_id=user.id)}}"
+                    role="button"
+                    >Delete</a>
+                </div>
+            -->
+                
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}  
+</div>
+{% endblock %}
