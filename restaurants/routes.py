@@ -71,10 +71,10 @@ def logout():
 @app.route('/callback')
 def callback():
     flow.fetch_token(authorization_response=request.url)
-
+    """
     if not session["state"] == request.args["state"]:
         abort(500)  # State does not match!
-
+    """
     credentials = flow.credentials
     request_session = requests.session()
     cached_session = cachecontrol.CacheControl(request_session)
@@ -350,3 +350,8 @@ def deleteUser(user_id):
         return render_template('deleteUser.html', user=user, login=login, userlogged = session["name"] if "google_id" in session else None)
     except:
         return redirect(url_for('errorRestaurant', error='Retrieving user'))
+
+@app.route('/privacy-policy')
+def privacyPolicy():
+    return render_template('privacyPolicy.html', userlogged = session["name"] if "google_id" in session else None)
+

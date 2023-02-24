@@ -6,6 +6,7 @@
         <h1 class="display-2 text-white">Homepage</h1>
         <a role="button" class="btn btn-success btn-md text-white mt-2" href="{{url_for('newRestaurant')}}">Create a new restaurant!</a>
     </div>
+    
 
     <div class="row mt-4">      
         {% if restaurants %}
@@ -35,4 +36,7 @@
         {% endfor %}
         {% endif %}  
     </div>
+    <footer>
+      <a href="{{url_for('privacyPolicy')}}">Privacy Policy</a>
+  </footer>
 {% endblock %}
